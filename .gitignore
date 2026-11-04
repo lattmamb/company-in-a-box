@@ -1,0 +1,14 @@
+
+# Local secrets (never commit)
+.env
+.env.*
+*.p8
+node_modules
+dist
+.DS_Store
+.turbo
+coverage
+*.db
+*.sqlite
+*.sqlite3
+local.db*

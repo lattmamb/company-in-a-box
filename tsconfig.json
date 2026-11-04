@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@company-in-a-box/core": ["packages/core/src"],
+      "@company-in-a-box/runtime": ["packages/runtime/src"],
+      "@company-in-a-box/gateway": ["packages/gateway/src"],
+      "@company-in-a-box/memory": ["packages/memory/src"],
+      "@company-in-a-box/skills": ["packages/skills/src"],
+      "@company-in-a-box/a2a": ["packages/a2a/src"],
+      "@company-in-a-box/intelligence": ["packages/intelligence/src"],
+      "@company-in-a-box/frontend": ["packages/frontend/src"],
+      "@company-in-a-box/dev": ["packages/dev/src"],
+      "@company-in-a-box/cli": ["packages/cli/src"],
+      "@company-in-a-box/taxonomy": ["packages/taxonomy/src"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build", ".turbo"]
+}

@@ -1,0 +1,65 @@
+{
+  "name": "@company-in-a-box/runtime",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./session": {
+      "types": "./dist/session/index.d.ts",
+      "import": "./dist/session/index.js"
+    },
+    "./channel": {
+      "types": "./dist/channel/index.d.ts",
+      "import": "./dist/channel/index.js"
+    },
+    "./tool": {
+      "types": "./dist/tool/index.d.ts",
+      "import": "./dist/tool/index.js"
+    },
+    "./skill": {
+      "types": "./dist/skill/index.d.ts",
+      "import": "./dist/skill/index.js"
+    },
+    "./model": {
+      "types": "./dist/model/index.d.ts",
+      "import": "./dist/model/index.js"
+    },
+    "./cron": {
+      "types": "./dist/cron/index.d.ts",
+      "import": "./dist/cron/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint",
+    "format": "oxfmt --write"
+  },
+  "dependencies": {
+    "zod": "^3.23.0",
+    "ulid": "^2.3.0",
+    "ws": "^8.18.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "@company-in-a-box/core": "workspace:*",
+    "@company-in-a-box/gateway": "workspace:*",
+    "@company-in-a-box/memory": "workspace:*",
+    "@company-in-a-box/skills": "workspace:*",
+    "@company-in-a-box/taxonomy": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "tsx": "^4.16.0",
+    "vitest": "^2.0.0",
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.10",
+    "@types/node-telegram-bot-api": "^0.64.7"
+  }
+}

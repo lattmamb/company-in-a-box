@@ -1,0 +1,30 @@
+{
+  "name": "company-in-a-box",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Company in a Box — Unified agent platform",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "format": "turbo run format",
+    "db:push": "turbo run db:push",
+    "db:studio": "turbo run db:studio",
+    "auth:build": "node_modules/.pnpm/esbuild@0.28.2/node_modules/esbuild/bin/esbuild packages/core/src/auth/index.ts --bundle --platform=node --format=esm --external:better-auth --external:drizzle-orm --external:@libsql/client --external:ulid --outfile=packages/core/dist/auth-handler.mjs"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.0",
+    "oxlint": "^0.10.0",
+    "oxfmt": "^0.10.0",
+    "@types/node": "^22.0.0",
+    "vitest": "^2.0.0",
+    "@vitest/coverage-v8": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
