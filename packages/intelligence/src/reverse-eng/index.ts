@@ -129,7 +129,7 @@ export interface StackFrameInfo {
 }
 
 export interface AnalysisOptions {
-  target: string;
+  target?: string;
   format?: "ELF" | "PE" | "Mach-O" | "DEX" | "WASM" | "auto";
   architecture?: "x86" | "x86_64" | "ARM" | "ARM64" | "MIPS" | "RISC-V" | "auto";
   depth?: "basic" | "standard" | "deep" | "full";
@@ -297,7 +297,7 @@ export class ReverseEngineer extends EventEmitter {
       const functions = options.depth !== "basic" ? await this.identifyFunctions(binaryPath, options) : [];
 
       // Phase 4: Cross-references
-      const crossReferences = options.includeCrossReferences !== false ? await this.extractCrossReferences(binaryPath) : [];
+      const crossRefs = options.includeCrossReferences !== false ? await this.extractCrossReferences(binaryPath) : [];
 
       // Phase 5: Call graph
       const callGraph = options.includeCallGraph !== false ? await this.buildCallGraph(binaryPath, functions) : { nodes: [], edges: [] };
@@ -482,6 +482,7 @@ export class ReverseEngineer extends EventEmitter {
           count: 1,
         });
       }
+    }
 
     return { nodes, edges };
   }

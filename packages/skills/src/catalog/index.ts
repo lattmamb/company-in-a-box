@@ -137,7 +137,7 @@ export class SkillCatalog extends EventEmitter {
       status: "active",
     };
 
-    const companyInstallations = this.installations.get(skill.companyId) || [];
+    const companyInstallations = this.installations.get(companyId) || [];
     companyInstallations.push(installation);
     this.installations.set(companyId, companyInstallations);
 

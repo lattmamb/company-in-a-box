@@ -153,8 +153,8 @@ export async function quotaManagement(input: {
   // In a real implementation, this would check and update quota in database
   return {
     allowed: true,
-    remaining: config.defaultQuota - input.requestedTokens,
-    resetAt: Date.now() + config.windowMs,
+    remaining: (input.config?.defaultQuota ?? 0) - input.requestedTokens,
+    resetAt: Date.now() + (input.config?.windowMs ?? 0),
   };
 }
 

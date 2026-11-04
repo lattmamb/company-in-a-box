@@ -70,7 +70,7 @@ export class CostTracker extends EventEmitter {
     this.costs.set(entry.companyId, companyCosts);
 
     // Check budgets
-    this.checkBudgets(entry);
+    this.checkBudgets(costEntry);
 
     this.emit("costRecorded", costEntry);
     return costEntry;
@@ -127,9 +127,9 @@ export class CostTracker extends EventEmitter {
     return summary;
   }
 
-  createBudget(budget: Omit<Budget, "id" | "spent" | "alertSent" | "createdAt" | "updatedAt">): Budget {
+  createBudget(input: Omit<Budget, "id" | "spent" | "alertSent" | "createdAt" | "updatedAt">): Budget {
     const budget: Budget = {
-      ...budget,
+      ...input,
       id: ulid(),
       spent: 0,
       alertSent: false,

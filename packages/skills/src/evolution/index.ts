@@ -193,4 +193,4 @@ export class SkillEvolutionEngine extends EventEmitter {
   }
 }
 
-export const evolutionEngine = new EvolutionEngine();
+export const evolutionEngine = new SkillEvolutionEngine();

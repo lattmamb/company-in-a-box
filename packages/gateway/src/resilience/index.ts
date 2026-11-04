@@ -283,6 +283,7 @@ export class ResilienceManager extends EventEmitter {
   };
 
   constructor() {
+    super();
     this.defaultConfigs = {
       circuitBreaker: {
         failureThreshold: 5,

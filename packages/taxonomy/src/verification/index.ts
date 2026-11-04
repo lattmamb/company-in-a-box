@@ -1,6 +1,6 @@
 import { TaxonomyVerificationInput, TaxonomyVerificationResult, GateResult, LearningPathStep } from "../types";
 import { getTaxonomyTraversal, getTaxonomyGraph, initializeTaxonomy } from "../graph";
-import { ROLE_SKILLS_MAP, SKILL_TO_TOPICS } from "./skill-mapping";
+
 
 export async function verifyTaxonomyGate(input: TaxonomyVerificationInput): Promise<TaxonomyVerificationResult> {
   // Ensure taxonomy is initialized
@@ -288,7 +288,6 @@ export const SKILL_TO_TOPICS: Record<string, string[]> = {
   "planning": ["strategic_planning", "roadmapping", "prioritization", "resource_planning"],
   "delegation": ["task_decomposition", "authority_assignment", "accountability", "follow_up"],
   "review": ["code_review", "design_review", "performance_review", "feedback_delivery"],
-  "reporting": ["status_reporting", "risk_reporting", "progress_tracking", "decision_documentation"],
   "team-leadership": ["coaching", "career_development", "conflict_resolution", "team_dynamics"],
   "project-management": ["agile_methodologies", "risk_management", "stakeholder_management", "delivery_tracking"],
   "stakeholder-communication": ["expectation_management", "negotiation", "influence", "presentation"],
@@ -303,7 +302,6 @@ export const SKILL_TO_TOPICS: Record<string, string[]> = {
   "audit-preparation": ["audit_planning", "evidence_collection", "control_testing", "findings_management"],
   "contract-review": ["contract_law", "clause_analysis", "negotiation", "risk_allocation"],
   "compliance-check": ["regulatory_mapping", "gap_analysis", "remediation_tracking", "policy_alignment"],
-  "risk-assessment": ["risk_frameworks", "quantitative_risk", "qualitative_risk", "risk_appetite"],
   "regulatory-research": ["legislative_tracking", "case_law", "regulatory_guidance", "industry_standards"],
   "due-diligence": ["data_room_management", "document_review", "red_flag_identification", "reporting"],
   "litigation-support": ["e_discovery", "expert_witness", "document_review", "case_strategy"],
@@ -334,14 +332,12 @@ export const SKILL_TO_TOPICS: Record<string, string[]> = {
   "infrastructure": ["iac", "cloud_providers", "networking", "security_groups"],
   "ci-cd": ["pipeline_design", "automated_testing", "deployment_strategies", "rollback"],
   "monitoring": ["metrics", "logging", "alerting", "dashboards"],
-  "incident-response": ["runbooks", "war_rooms", "communication", "postmortem"],
   "container-orchestration": ["kubernetes", "docker", "service_mesh", "scaling"],
   "cloud-architecture": ["multi_cloud", "serverless", "event_driven", "cost_optimization"],
   "automation": ["scripting", "configuration_management", "policy_as_code", "drift_detection"],
   "security-hardening": ["least_privilege", "encryption", "audit_logging", "compliance"],
   "communication": ["active_listening", "clarity", "empathy", "feedback"],
   "task-management": ["prioritization", "time_blocking", "delegation", "tracking"],
-  "documentation": ["structure", "clarity", "maintenance", "accessibility"],
   "time-management": ["prioritization", "focus", "boundaries", "energy_management"],
   "problem-solving": ["frameworks", "creative_thinking", "decision_making", "bias_awareness"],
   "learning-agility": ["growth_mindset", "feedback_seeking", "experimentation", "reflection"],

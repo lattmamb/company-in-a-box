@@ -266,7 +266,7 @@ export class GeospatialEngine extends EventEmitter {
       },
       type: options.types?.[0] || "address",
       properties: { mock: true },
-    });
+    }));
   }
 
   private mockRoute(options: RouteOptions): RouteResult {

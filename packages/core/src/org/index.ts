@@ -48,8 +48,8 @@ export async function createCompany(input: CreateCompanyInput) {
     slug: input.slug,
     description: input.description,
     settings: defaultSettings,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   await db.insert(companies).values(company);
@@ -63,8 +63,8 @@ export async function createCompany(input: CreateCompanyInput) {
     name: input.ownerName,
     role: "owner",
     status: "active",
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   await db.insert(members).values(member);
@@ -101,7 +101,7 @@ export async function updateCompany(companyId: string, input: UpdateCompanyInput
       name: input.name ?? current.name,
       description: input.description ?? current.description,
       settings: updatedSettings,
-      updatedAt: Date.now(),
+      updatedAt: new Date(),
     })
     .where(eq(companies.id, companyId));
 
@@ -139,8 +139,8 @@ export async function inviteMember(companyId: string, input: InviteMemberInput) 
     name: input.name,
     role: input.role || "member",
     status: "invited",
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   await db.insert(members).values(member);
@@ -152,7 +152,7 @@ export async function updateMemberRole(companyId: string, memberId: string, role
 
   await db
     .update(members)
-    .set({ role, updatedAt: Date.now() })
+    .set({ role, updatedAt: new Date() })
     .where(and(eq(members.id, memberId), eq(members.companyId, companyId)));
 
   return db.select().from(members).where(eq(members.id, memberId)).limit(1);
@@ -187,7 +187,7 @@ export async function acceptInvitation(companyId: string, email: string, userId:
       userId,
       name: name ?? member[0].name,
       status: "active",
-      updatedAt: Date.now(),
+      updatedAt: new Date(),
     })
     .where(eq(members.id, member[0].id));
 

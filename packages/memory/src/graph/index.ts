@@ -85,10 +85,9 @@ export class GraphStore {
     await this.db.execute(sql`CREATE INDEX IF NOT EXISTS idx_edges_type ON graph_edges(company_id, type)`);
   }
 
-  async addNode(companyId: string, node: Omit<GraphNode, "id" | "createdAt" | "updatedAt">): Promise<GraphNode> {
-    const now = Date.now();
+  async addNode(companyId: string, input: Omit<GraphNode, "id" | "createdAt" | "updatedAt">): Promise<GraphNode> {
     const node: GraphNode = {
-      ...node,
+      ...input,
       id: ulid(),
       companyId,
       createdAt: Date.now(),
@@ -150,9 +149,9 @@ export class GraphStore {
     await this.db.execute(sql`DELETE FROM graph_nodes WHERE id = ${nodeId}`);
   }
 
-  async addEdge(companyId: string, edge: Omit<GraphEdge, "id" | "createdAt">): Promise<GraphEdge> {
+  async addEdge(companyId: string, input: Omit<GraphEdge, "id" | "createdAt">): Promise<GraphEdge> {
     const edge: GraphEdge = {
-      ...edge,
+      ...input,
       id: ulid(),
       companyId,
       createdAt: Date.now(),

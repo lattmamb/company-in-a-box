@@ -73,7 +73,6 @@ export class EmbeddingService extends EventEmitter {
         continue;
       }
 
-      const cacheKey = this.getCacheKey(text);
       const cached = this.cache.get(text);
       if (this.config.cacheEnabled && this.cache.has(text)) {
         const cached = this.cache.get(text)!;

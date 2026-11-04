@@ -69,7 +69,7 @@ export class ChannelManager extends EventEmitter {
       createdAt: Date.now(),
       updatedAt: Date.now(),
       metadata: {},
-    });
+    };
 
     this.channels.set(channel.id, channel);
 
@@ -84,11 +84,11 @@ export class ChannelManager extends EventEmitter {
       });
 
       adapter.onStatusChange((status) => {
-        const channel = this.channels.get(channel.id);
-        if (channel) {
-          channel.status = status as any;
-          channel.updatedAt = Date.now();
-          this.emit("statusChange", channel);
+        const ch = this.channels.get(channel.id);
+        if (ch) {
+          ch.status = status as any;
+          ch.updatedAt = Date.now();
+          this.emit("statusChange", ch);
         }
       });
 
@@ -101,7 +101,7 @@ export class ChannelManager extends EventEmitter {
     }
   }
 
-  async sendMessage(channelId: string, message: Omit<ChannelMessage, "id" | "channelId" | "timestamp">): Promise<ChannelMessage> {
+  async sendMessage(channelId: string, input: Omit<ChannelMessage, "id" | "channelId" | "timestamp">): Promise<ChannelMessage> {
     const channel = this.channels.get(channelId);
     if (!channel) throw new Error("Channel not found");
     if (channel.status !== "connected") {
@@ -112,7 +112,7 @@ export class ChannelManager extends EventEmitter {
     if (!adapter) throw new Error(`No adapter for channel type: ${channel.type}`);
 
     const message: ChannelMessage = {
-      ...message,
+      ...input,
       id: ulid(),
       channelId,
       timestamp: Date.now(),

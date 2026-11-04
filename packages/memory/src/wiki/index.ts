@@ -64,7 +64,9 @@ export interface WikiSearchOptions {
 export class WikiStore extends EventEmitter {
   private db: any;
 
-  constructor() {}
+  constructor() {
+    super();
+  }
 
   async initialize(dbUrl: string = "file:wiki.db"): Promise<void> {
     const client = createClient({ url: dbUrl });
@@ -155,7 +157,7 @@ export class WikiStore extends EventEmitter {
 
     await this.db.execute(sql`
       INSERT INTO wiki_spaces (id, company_id, name, slug, description, default_format, created_at, updated_at)
-      VALUES (${ulid()}, ${input.companyId}, ${input.name}, ${input.slug}, ${input.description || ""}, ${input.defaultFormat || "markdown"}, ${Date.now()}, ${Date.now()})
+      VALUES (${ulid()}, ${companyId}, ${input.name}, ${input.slug}, ${input.description || ""}, ${input.defaultFormat || "markdown"}, ${Date.now()}, ${Date.now()})
     `);
 
     return { id: ulid(), ...input, createdAt: Date.now(), updatedAt: Date.now() };
@@ -212,7 +214,7 @@ export class WikiStore extends EventEmitter {
 
     await this.db.execute(sql`
       INSERT INTO wiki_pages (id, company_id, space_id, slug, title, content, format, tags, status, version, parent_id, created_by, created_at, updated_at)
-      VALUES (${ulid()}, ${input.companyId}, ${input.spaceId}, ${input.slug}, ${input.title}, ${input.content}, ${input.format || "markdown"}, ${JSON.stringify(input.tags || [])}, ${input.status || "draft"}, 1, ${input.parentId || null}, ${input.createdBy}, ${Date.now()}, ${Date.now()})
+      VALUES (${ulid()}, ${companyId}, ${spaceId}, ${input.slug}, ${input.title}, ${input.content}, ${input.format || "markdown"}, ${JSON.stringify(input.tags || [])}, ${input.status || "draft"}, 1, ${input.parentId || null}, ${input.createdBy}, ${Date.now()}, ${Date.now()})
     `);
 
     return { id: ulid(), ...input, version: 1, createdAt: Date.now(), updatedAt: Date.now() };
@@ -312,7 +314,7 @@ export class WikiStore extends EventEmitter {
     offset?: number;
   }): Promise<any[]> {
     let query = `SELECT * FROM wiki_pages WHERE company_id = ? AND space_id = ?`;
-    const params = [options.companyId, options.spaceId];
+    const params = [companyId, spaceId];
 
     if (options.status) {
       // Add status filter

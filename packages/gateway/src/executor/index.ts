@@ -8,9 +8,8 @@ import {
   ChatMessage,
   ChatChoice,
   Usage,
-  ChatRequest,
   Tool,
-} from "./types";
+} from "../types";
 
 export interface ExecutorConfig {
   timeout: number;
@@ -39,7 +38,7 @@ export interface ExecutionError {
   modelId: string;
 }
 
-export interface CircuitBreakerState {
+export interface ExecutorCircuitBreakerState {
   state: "closed" | "open" | "half-open";
   failures: number;
   lastFailure: number;
@@ -47,10 +46,11 @@ export interface CircuitBreakerState {
 }
 
 export class ProviderExecutor extends EventEmitter {
-  private circuitBreakers: Map<string, CircuitBreakerState> = new Map();
+  private circuitBreakers: Map<string, ExecutorCircuitBreakerState> = new Map();
   private config: ExecutorConfig;
 
   constructor(config: Partial<ExecutorConfig> = {}) {
+    super();
     this.config = {
       timeout: config.timeout || 60000,
       maxRetries: config.maxRetries || 3,
@@ -183,7 +183,7 @@ export class ProviderExecutor extends EventEmitter {
     return false;
   }
 
-  private getCircuitBreaker(key: string): CircuitBreakerState {
+  private getCircuitBreaker(key: string): ExecutorCircuitBreakerState {
     let circuit = this.circuitBreakers.get(key);
     if (!circuit) {
       circuit = {
@@ -220,11 +220,11 @@ export class ProviderExecutor extends EventEmitter {
     }
   }
 
-  getCircuitState(key: string): CircuitBreakerState | undefined {
+  getCircuitState(key: string): ExecutorCircuitBreakerState | undefined {
     return this.circuitBreakers.get(key);
   }
 
-  getAllCircuitStates(): Map<string, CircuitBreakerState> {
+  getAllCircuitStates(): Map<string, ExecutorCircuitBreakerState> {
     return new Map(this.circuitBreakers);
   }
 

@@ -124,10 +124,10 @@ export class ResponseCache {
     }
 
     // Check disk
-    const entry = await this.getFromDisk(key);
-    if (entry) {
-      this.memoryCache.set(key, entry);
-      return entry.value;
+    const diskEntry = await this.getFromDisk(key);
+    if (diskEntry) {
+      this.memoryCache.set(key, diskEntry);
+      return diskEntry.value;
     }
 
     return null;

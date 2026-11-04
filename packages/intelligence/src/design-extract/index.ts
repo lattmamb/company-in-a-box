@@ -67,7 +67,6 @@ export interface DesignSystem {
   components: DesignComponent[];
   themes: Theme[];
   guidelines: DesignGuideline[];
-  version: string;
   createdAt: number;
   updatedAt: number;
 }
@@ -138,9 +137,9 @@ export class DesignExtractor extends EventEmitter {
     };
   }
 
-  async extractFromFigma(fileId?: string, token?: string): Promise<ExtractionResult> {
-    const fileId = fileId || this.config.figmaFileId;
-    const token = token || this.config.figmaToken;
+  async extractFromFigma(fileIdArg?: string, tokenArg?: string): Promise<ExtractionResult> {
+    const fileId = fileIdArg || this.config.figmaFileId;
+    const token = tokenArg || this.config.figmaToken;
 
     if (!fileId || !token) {
       throw new Error("Figma file ID and token required");
@@ -200,7 +199,19 @@ export class DesignExtractor extends EventEmitter {
       source: `image:${imagePath}`,
       warnings: ["Mock extraction - image parsing not implemented"],
       errors: [],
-    });
+    };
+  }
+
+  private mapPropType(type: string): string {
+    const map: Record<string, string> = {
+      string: "string",
+      number: "number",
+      boolean: "boolean",
+      array: "unknown[]",
+      object: "Record<string, any>",
+      function: "(...args: any[]) => any",
+    };
+    return map[type] || "any";
   }
 
   private createMockDesignSystem(source: string): any {
@@ -312,7 +323,6 @@ export class DesignExtractor extends EventEmitter {
           examples: { good: "margin: var(--spacing-md)", bad: "margin: 16px" },
         },
       ],
-      version: "1.0.0",
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };

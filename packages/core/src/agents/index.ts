@@ -3,7 +3,7 @@ import { agents, agentApiKeys, type Agent, type NewAgent, type AgentRuntimeConfi
 import { eq, and, desc, count } from "drizzle-orm";
 import { ulid } from "ulid";
 import { createHash, randomBytes } from "crypto";
-import { verifyTaxonomyGate } from "../../taxonomy/src/verification";
+import { verifyTaxonomyGate } from "@company-in-a-box/taxonomy/src/verification";
 
 export interface ProvisionAgentInput {
   companyId: string;
@@ -130,8 +130,8 @@ export async function provisionAgent(input: ProvisionAgentInput) {
       provisionedAt: Date.now(),
       provisionedBy: "system",
     },
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   await db.insert(agents).values(agent);
@@ -221,7 +221,7 @@ export async function updateAgent(agentId: string, input: UpdateAgentInput) {
   const db = getDatabase();
 
   const updateData: Partial<typeof agents.$inferInsert> = {
-    updatedAt: Date.now(),
+    updatedAt: new Date(),
   };
 
   if (input.name !== undefined) updateData.name = input.name;
@@ -252,7 +252,7 @@ export async function resumeAgent(agentId: string) {
 
 export async function terminateAgent(agentId: string) {
   const db = getDatabase();
-  await db.update(agents).set({ status: "terminated", updatedAt: Date.now() }).where(eq(agents.id, agentId));
+  await db.update(agents).set({ status: "terminated", updatedAt: new Date() }).where(eq(agents.id, agentId));
   return { success: true };
 }
 
@@ -273,8 +273,7 @@ export async function createAgentApiKey(agentId: string, name: string, scopes: s
     keyHash,
     keyPrefix,
     scopes,
-    expiresAt,
-    createdAt: Date.now(),
+    expiresAt: new Date(expiresAt),
   });
 
   return { key: rawKey, prefix: keyPrefix, expiresAt };
@@ -290,17 +289,17 @@ export async function validateAgentApiKey(keyPrefix: string, keyHash: string) {
 
   if (!result[0]) return null;
   if (result[0].revokedAt) return null;
-  if (result[0].expiresAt && result[0].expiresAt < Date.now()) return null;
+  if (result[0].expiresAt && result[0].expiresAt.getTime() < Date.now()) return null;
 
   // Update last used
-  await db.update(agentApiKeys).set({ lastUsedAt: Date.now() }).where(eq(agentApiKeys.id, result[0].id));
+  await db.update(agentApiKeys).set({ lastUsedAt: new Date() }).where(eq(agentApiKeys.id, result[0].id));
 
   return result[0];
 }
 
 export async function revokeAgentApiKey(keyId: string) {
   const db = getDatabase();
-  await db.update(agentApiKeys).set({ revokedAt: Date.now() }).where(eq(agentApiKeys.id, keyId));
+  await db.update(agentApiKeys).set({ revokedAt: new Date() }).where(eq(agentApiKeys.id, keyId));
   return { success: true };
 }
 

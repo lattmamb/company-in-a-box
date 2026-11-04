@@ -464,8 +464,6 @@ export const BUILTIN_ROLES: RoleDefinition[] = [
   },
 ];
 
-export const roleRegistry = new RoleRegistry();
-
 // Register built-in roles
 for (const role of BUILTIN_ROLES) {
   roleRegistry.registerRole(role);

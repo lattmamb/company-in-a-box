@@ -116,12 +116,12 @@ export class SessionManager {
     return updated;
   }
 
-  async addMessage(sessionId: string, message: Omit<SessionMessage, "id" | "timestamp">): Promise<SessionMessage> {
+  async addMessage(sessionId: string, input: Omit<SessionMessage, "id" | "timestamp">): Promise<SessionMessage> {
     const session = this.sessions.get(sessionId);
     if (!session) throw new Error("Session not found");
 
     const message: SessionMessage = {
-      ...message,
+      ...input,
       id: ulid(),
       timestamp: Date.now(),
     };

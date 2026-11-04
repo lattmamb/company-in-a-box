@@ -119,6 +119,7 @@ export class MemoryProxy extends EventEmitter {
 
         // Also add to graph
         await graphStore.addNode(input.companyId, {
+          companyId: input.companyId,
           type: "document",
           label: doc.metadata.title || "Document",
           properties: {

@@ -88,6 +88,7 @@ export interface GateResult {
   passed: boolean;
   details: string;
   evidence: string[];
+  failures?: string[];
 }
 
 export interface LearningPathStep {

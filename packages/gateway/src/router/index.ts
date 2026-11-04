@@ -10,7 +10,7 @@ import {
   Usage,
   ModelListResponse,
   ModelCapability,
-} from "./types";
+} from "../types";
 
 export interface RoutingStrategy {
   name: string;
@@ -38,9 +38,10 @@ export interface RoutingResult {
 export class ModelRouter extends EventEmitter {
   private providers: Map<string, Provider> = new Map();
   private strategies: Map<string, RoutingStrategy> = new Map();
-  private defaultStrategy: ComboStrategy = "auto";
+  private defaultStrategy: ComboStrategy["name"] = "auto";
 
   constructor() {
+    super();
     this.registerBuiltinStrategies();
   }
 
@@ -64,7 +65,7 @@ export class ModelRouter extends EventEmitter {
     this.strategies.set(strategy.name, strategy);
   }
 
-  setDefaultStrategy(strategy: ComboStrategy): void {
+  setDefaultStrategy(strategy: ComboStrategy["name"]): void {
     this.defaultStrategy = strategy;
   }
 
@@ -89,7 +90,7 @@ export class ModelRouter extends EventEmitter {
     const targets = strategy.selectTargets(request, providers);
     
     return {
-      targets: targets.map(t => ({ provider: t.providerId || "", model: t.id })),
+      targets: targets.map(t => ({ provider: t.id, model: t.name })),
       strategy: this.defaultStrategy,
       fallbackChain: [],
     };

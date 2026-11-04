@@ -35,8 +35,6 @@
     "zod": "^3.23.0",
     "ulid": "^2.3.0",
     "@company-in-a-box/core": "workspace:*",
-    "@company-in-a-box/runtime": "workspace:*",
-    "@company-in-a-box/memory": "workspace:*",
     "@company-in-a-box/taxonomy": "workspace:*"
   },
   "devDependencies": {

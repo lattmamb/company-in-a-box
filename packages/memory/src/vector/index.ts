@@ -179,7 +179,7 @@ export class VectorStore {
       score: 1 - (row[5] as number), // Convert distance to similarity
       metadata: JSON.parse(row[3] as string),
       document: row[4] as string,
-    }).filter((r: any) => r.score >= (options.threshold || 0.7));
+    })).filter((r: any) => r.score >= (options.threshold || 0.7));
   }
 
   async delete(id: string): Promise<void> {

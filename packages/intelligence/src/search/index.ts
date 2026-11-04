@@ -98,7 +98,6 @@ export class SearchEngine extends EventEmitter {
     this.rateLimits.set(rateLimitKey, rateLimit);
 
     // Search across providers
-    const allResults: SearchResult[] = [];
     const providerPromises = sources.map(async (sourceName) => {
       const provider = this.providers.get(sourceName);
       if (!provider) {
@@ -235,7 +234,7 @@ export class SearchEngine extends EventEmitter {
       publishedAt: Date.now() - Math.random() * 86400000 * 30,
       score: 0.9 - i * 0.1,
       metadata: { mock: true },
-    });
+    }));
   }
 
   async searchWithAgentReach(query: string, options: Partial<SearchOptions> = {}): Promise<SearchResult[]> {

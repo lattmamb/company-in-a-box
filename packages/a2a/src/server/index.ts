@@ -2,7 +2,7 @@ import { ulid } from "ulid";
 import { EventEmitter } from "events";
 import { WebSocketServer, WebSocket } from "ws";
 import { createServer, IncomingMessage, ServerResponse } from "http";
-import { url } from "url";
+import { parse as parseUrl } from "url";
 import {
   JSONRPCMessage,
   JSONRPCRequest,
@@ -22,9 +22,6 @@ import {
   DiscoverSkillsResponse,
   HealthCheckRequest,
   HealthCheckResponse,
-  JSONRPCError,
-  AgentCard,
-  Task,
   DelegateTaskRequestSchema,
   TaskStatusRequestSchema,
   TaskCancelRequestSchema,
@@ -34,9 +31,8 @@ import {
   TaskSchema,
 } from "../protocol";
 import { getDatabase } from "@company-in-a-box/core/src/db/client";
-import { agents, tasks, type Agent, type Task as TaskSchema } from "@company-in-a-box/core/src/db/schema";
+import { agents, type Agent } from "@company-in-a-box/core/src/db/schema";
 import { eq, and, desc } from "drizzle-orm";
-import { ulid } from "ulid";
 import { verifyTaxonomyGate } from "@company-in-a-box/taxonomy/src/verification";
 import { skillCatalog } from "@company-in-a-box/skills/src/catalog";
 import { roleRegistry } from "@company-in-a-box/skills/src/roles";
@@ -103,7 +99,7 @@ export class A2AServer extends EventEmitter {
   }
 
   private async handleHTTPRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
-    const parsedUrl = url.parse(req.url || "", true);
+    const parsedUrl = parseUrl(req.url || "", true);
     const path = parsedUrl.pathname || "/";
 
     // CORS headers
@@ -237,7 +233,7 @@ export class A2AServer extends EventEmitter {
       status: "pending",
       input: validated.task.input,
       output: validated.task.output,
-      error: validated.task.error,
+      error: validated.task.error ? { code: validated.task.error.code ?? "unknown", message: validated.task.error.message ?? "unknown", details: validated.task.error.details, recoverable: validated.task.error.recoverable ?? false } : undefined,
       createdAt: now,
       updatedAt: now,
       metadata: validated.task.metadata || {},
@@ -347,7 +343,7 @@ export class A2AServer extends EventEmitter {
     let dbHealthy = false;
     
     try {
-      await db.execute("SELECT 1");
+      await db.$client.execute("SELECT 1");
       dbHealthy = true;
     } catch {
       dbHealthy = false;
@@ -427,7 +423,7 @@ export class A2AServer extends EventEmitter {
 
         switch (request.method) {
           case "a2a.delegateTask":
-            result = await this.delegateTask(request.params);
+            result = await this.delegateTask(request.params, null);
             break;
           case "a2a.getTaskStatus":
             result = await this.getTaskStatus(request.params);

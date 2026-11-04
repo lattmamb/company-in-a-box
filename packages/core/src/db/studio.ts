@@ -15,7 +15,7 @@ async function studio() {
   // This would typically launch the Drizzle Studio UI
   // For now, we'll just verify the connection
   try {
-    const result = await db.execute("SELECT 1 as test");
+    const result = await db.$client.execute("SELECT 1 as test");
     console.log("Connection successful:", result);
   } catch (err) {
     console.error("Connection failed:", err);
