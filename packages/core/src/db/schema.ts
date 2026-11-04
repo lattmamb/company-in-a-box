@@ -138,7 +138,7 @@ export const issues = sqliteTable("issues", {
   title: text("title").notNull(),
   description: text("description"),
   status: text("status", { enum: ["backlog", "todo", "in_progress", "review", "blocked", "done", "cancelled"] }).notNull().default("backlog"),
-  priority: text("priority", { enum: ["low", "medium", "high", "critical"] }).notNull().default("medium"),
+  priority: text("priority", { enum: ["low", "medium", "high", "critical", "urgent"] }).notNull().default("medium"),
   type: text("type", { enum: ["feature", "bug", "chore", "research", "security", "compliance"] }).notNull().default("feature"),
   assigneeAgentId: text("assignee_agent_id").references(() => agents.id, { onDelete: "set null" }),
   reporterId: text("reporter_id").notNull(),
@@ -238,7 +238,7 @@ export const approvalRequests = sqliteTable("approval_requests", {
   actionType: text("action_type", { enum: ["contract", "payment", "legal_conclusion", "external_submission", "destructive_change", "agent_provision", "skill_publish", "finance_packet", "evidence_release"] }).notNull(),
   title: text("title").notNull(),
   description: text("description"),
-  status: text("status", { enum: ["pending", "approved", "blocked", "expired"] }).notNull().default("pending"),
+  status: text("status", { enum: ["pending", "approved", "blocked", "expired", "rejected", "revision_requested"] }).notNull().default("pending"),
   requestedBy: text("requested_by").notNull(),
   decidedBy: text("decided_by"),
   decidedAt: integer("decided_at", { mode: "timestamp" }),
@@ -348,6 +348,60 @@ export const agentApiKeys = sqliteTable("agent_api_keys", {
 }));
 
 // ============================================================================
+// GOALS
+// ============================================================================
+
+export const goals = sqliteTable("goals", {
+  id: text("id").primaryKey().$defaultFn(() => ulid()),
+  companyId: text("company_id").notNull().references(() => companies.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  description: text("description"),
+  status: text("status", { enum: ["active", "achieved", "archived"] }).notNull().default("active"),
+  createdBy: text("created_by").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+}, (table) => ({
+  companyIdx: index("goals_company_idx").on(table.companyId),
+}));
+
+// ============================================================================
+// ISSUE COMMENTS
+// ============================================================================
+
+export const issueComments = sqliteTable("issue_comments", {
+  id: text("id").primaryKey().$defaultFn(() => ulid()),
+  companyId: text("company_id").notNull().references(() => companies.id, { onDelete: "cascade" }),
+  issueId: text("issue_id").notNull().references(() => issues.id, { onDelete: "cascade" }),
+  authorType: text("author_type", { enum: ["user", "agent", "system"] }).notNull(),
+  authorId: text("author_id").notNull(),
+  body: text("body").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+}, (table) => ({
+  issueIdx: index("issue_comments_issue_idx").on(table.issueId),
+  companyIdx: index("issue_comments_company_idx").on(table.companyId),
+}));
+
+// ============================================================================
+// COST ENTRIES
+// ============================================================================
+
+export const costEntries = sqliteTable("cost_entries", {
+  id: text("id").primaryKey().$defaultFn(() => ulid()),
+  companyId: text("company_id").notNull().references(() => companies.id, { onDelete: "cascade" }),
+  agentId: text("agent_id").references(() => agents.id, { onDelete: "set null" }),
+  provider: text("provider").notNull(),
+  model: text("model").notNull(),
+  inputTokens: integer("input_tokens").notNull().default(0),
+  outputTokens: integer("output_tokens").notNull().default(0),
+  costCents: integer("cost_cents").notNull().default(0),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
+}, (table) => ({
+  companyIdx: index("cost_entries_company_idx").on(table.companyId),
+  agentIdx: index("cost_entries_agent_idx").on(table.agentId),
+  createdIdx: index("cost_entries_created_idx").on(table.createdAt),
+}));
+
+// ============================================================================
 // TYPE EXPORTS
 // ============================================================================
 
@@ -378,6 +432,12 @@ export type NewAuditEvent = typeof auditEvents.$inferInsert;
 export type ActivityLog = typeof activityLog.$inferSelect;
 export type NewActivityLog = typeof activityLog.$inferInsert;
 export type AgentApiKey = typeof agentApiKeys.$inferSelect;
+export type Goal = typeof goals.$inferSelect;
+export type NewGoal = typeof goals.$inferInsert;
+export type IssueComment = typeof issueComments.$inferSelect;
+export type NewIssueComment = typeof issueComments.$inferInsert;
+export type CostEntry = typeof costEntries.$inferSelect;
+export type NewCostEntry = typeof costEntries.$inferInsert;
 export type NewAgentApiKey = typeof agentApiKeys.$inferInsert;
 // ── Better-Auth tables ────────────────────────────────────────────────────
 // Canonical better-auth user/session/account/verification tables (sqlite).

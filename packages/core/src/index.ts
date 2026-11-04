@@ -1,7 +1,15 @@
 // Core package exports
-// NOTE: org/* and agents/* are intentionally not re-exported — they have
-// pre-existing type errors that would leak into consumers' typechecks.
 export * from "./db/schema";
 export * from "./db/client";
 export { createAuth, getAuth } from "./auth";
 export type { Database } from "./db/client";
+
+// Domain services
+export * from "./org";
+export * from "./agents";
+export * from "./tasks";
+export * from "./approvals";
+export * from "./goals";
+export * from "./evidence";
+export * from "./finance";
+export * from "./monitoring";

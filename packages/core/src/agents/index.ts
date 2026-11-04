@@ -323,3 +323,17 @@ export async function getAgentStats(companyId: string) {
     byRole: byRole.reduce((acc, row) => ({ ...acc, [row.role]: row.count }), {}),
   };
 }
+/**
+ * Trigger an immediate heartbeat (work cycle) for an agent: stamps
+ * lastHeartbeatAt and returns the agent. Used by the API's
+ * POST /agents/:id/heartbeat/invoke (Paperclip parity).
+ */
+export async function invokeAgentHeartbeat(agentId: string) {
+  const db = getDatabase();
+  const updated = await db
+    .update(agents)
+    .set({ lastHeartbeatAt: new Date(), updatedAt: new Date() })
+    .where(eq(agents.id, agentId))
+    .returning();
+  return updated[0] ?? null;
+}
